@@ -10,7 +10,7 @@ G Nexus remplace Logitech Gaming Software et G HUB pour trois appareils Logitech
 
 Il tourne dans la zone de notification, sans logiciel Logitech, et fonctionne sans connexion internet.
 
-[![Buy Me a Coffee at ko-fi.com](https://storage.ko-fi.com/cdn/kofi6.png?v=6)](https://ko-fi.com/W4F728ZFSH)
+<a href="https://ko-fi.com/W4F728ZFSH"><img height="36" src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" alt="Buy Me a Coffee at ko-fi.com"></a>
 
 ## Fonctionnalités
 
