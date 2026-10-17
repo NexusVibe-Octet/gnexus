@@ -10,7 +10,26 @@ G Nexus replaces Logitech Gaming Software and G HUB for three Logitech devices, 
 
 It runs in the notification area, needs no Logitech software, and keeps working without an internet connection.
 
+<p align="center"><img src="docs/screenshots/g13.png" width="820" alt="G Nexus — G13 page"></p>
+
 <a href="https://ko-fi.com/W4F728ZFSH"><img height="36" src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" alt="Buy Me a Coffee at ko-fi.com"></a>
+
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><a href="docs/screenshots/mouse.png"><img src="docs/screenshots/mouse.png" width="400" alt="G502 X PLUS: buttons, DPI, lighting"></a><br><sub>G502 X PLUS: buttons, DPI, lighting</sub></td>
+    <td align="center"><a href="docs/screenshots/headset.png"><img src="docs/screenshots/headset.png" width="400" alt="PRO X Wireless: battery, volume, sleep"></a><br><sub>PRO X Wireless: battery, volume, sleep</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="docs/screenshots/equalizer.png"><img src="docs/screenshots/equalizer.png" width="400" alt="10-band equalizer with per-application profiles"></a><br><sub>10-band equalizer with per-application profiles</sub></td>
+    <td align="center"><a href="docs/screenshots/key-editor.png"><img src="docs/screenshots/key-editor.png" width="400" alt="Key editor: tap, hold, tap-tap, tap-hold"></a><br><sub>Key editor: tap, hold, tap-tap, tap-hold</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="docs/screenshots/macros.png"><img src="docs/screenshots/macros.png" width="400" alt="Macros: editor and RECORD"></a><br><sub>Macros: editor and RECORD</sub></td>
+    <td align="center"><a href="docs/screenshots/color.png"><img src="docs/screenshots/color.png" width="400" alt="Backlight colour per bank"></a><br><sub>Backlight colour per bank</sub></td>
+  </tr>
+</table>
 
 ## Features
 

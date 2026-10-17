@@ -10,7 +10,26 @@ G Nexus remplace Logitech Gaming Software et G HUB pour trois appareils Logitech
 
 Il tourne dans la zone de notification, sans logiciel Logitech, et fonctionne sans connexion internet.
 
+<p align="center"><img src="docs/screenshots/g13.png" width="820" alt="G Nexus — page du G13"></p>
+
 <a href="https://ko-fi.com/W4F728ZFSH"><img height="36" src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" alt="Buy Me a Coffee at ko-fi.com"></a>
+
+## Captures d'écran
+
+<table>
+  <tr>
+    <td align="center"><a href="docs/screenshots/mouse.png"><img src="docs/screenshots/mouse.png" width="400" alt="G502 X PLUS : boutons, DPI, éclairage"></a><br><sub>G502 X PLUS : boutons, DPI, éclairage</sub></td>
+    <td align="center"><a href="docs/screenshots/headset.png"><img src="docs/screenshots/headset.png" width="400" alt="PRO X Wireless : batterie, volume, mise en veille"></a><br><sub>PRO X Wireless : batterie, volume, mise en veille</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="docs/screenshots/equalizer.png"><img src="docs/screenshots/equalizer.png" width="400" alt="Égaliseur 10 bandes avec profils par application"></a><br><sub>Égaliseur 10 bandes avec profils par application</sub></td>
+    <td align="center"><a href="docs/screenshots/key-editor.png"><img src="docs/screenshots/key-editor.png" width="400" alt="Éditeur de touche : tap, hold, tap-tap, tap-hold"></a><br><sub>Éditeur de touche : tap, hold, tap-tap, tap-hold</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="docs/screenshots/macros.png"><img src="docs/screenshots/macros.png" width="400" alt="Macros : éditeur et RECORD"></a><br><sub>Macros : éditeur et RECORD</sub></td>
+    <td align="center"><a href="docs/screenshots/color.png"><img src="docs/screenshots/color.png" width="400" alt="Couleur du rétroéclairage par menu"></a><br><sub>Couleur du rétroéclairage par menu</sub></td>
+  </tr>
+</table>
 
 ## Fonctionnalités
 
