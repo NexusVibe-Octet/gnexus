@@ -1,0 +1,61 @@
+# Maintainer: NexusVibe <344081753+NexusVibe-Octet@users.noreply.github.com>
+#
+# Arch / CachyOS package of G Nexus, built from the source of a published release.
+# Local build (before the release exists): see deploy/linux/arch/README.md.
+
+pkgname=gnexus
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Replaces Logitech Gaming Software / G HUB for the G13, G502 X PLUS and PRO X Wireless"
+arch=('x86_64')
+url="https://github.com/NexusVibe-Octet/gnexus"
+license=('MIT OR Apache-2.0')
+depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator' 'systemd-libs' 'hicolor-icon-theme')
+makedepends=('cargo')
+optdepends=('pipewire: equalizer of the headset (filter chain)'
+            'wireplumber: equalizer placed in front of the headset output'
+            'libpulse: volume of the headset (pactl)'
+            'kwin: per-game profiles and in-game overlay (KDE Plasma)')
+install=gnexus.install
+options=('!lto' '!debug')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+# Run `updpkgsums` once the release archive is on GitHub.
+sha256sums=('SKIP')
+
+prepare() {
+    cd "$pkgname-$pkgver"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+    cd "$pkgname-$pkgver"
+    export RUSTUP_TOOLCHAIN=stable
+    # .cargo/config.toml names a build directory of the author's Windows machine
+    export CARGO_TARGET_DIR=target
+    cargo build --frozen --release -p g13-gui --features tauri/custom-protocol
+}
+
+check() {
+    cd "$pkgname-$pkgver"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo test --frozen --release -p g13-core -p g13-daemon -p g13-dsp -p logi-hidpp
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    install -Dm755 target/release/g13-studio "$pkgdir/usr/bin/gnexus"
+    install -Dm644 deploy/linux/gnexus.desktop "$pkgdir/usr/share/applications/gnexus.desktop"
+    install -Dm644 crates/g13-gui/icons/32x32.png "$pkgdir/usr/share/icons/hicolor/32x32/apps/gnexus.png"
+    install -Dm644 crates/g13-gui/icons/128x128.png "$pkgdir/usr/share/icons/hicolor/128x128/apps/gnexus.png"
+    install -Dm644 crates/g13-gui/icons/icon.png "$pkgdir/usr/share/icons/hicolor/256x256/apps/gnexus.png"
+    # device access without root, and /dev/uinput loaded at boot
+    install -Dm644 deploy/linux/70-gnexus-uaccess.rules "$pkgdir/usr/lib/udev/rules.d/70-gnexus-uaccess.rules"
+    install -Dm644 deploy/linux/uinput.conf "$pkgdir/usr/lib/modules-load.d/gnexus-uinput.conf"
+    # optional (macro recording): installed by the user, see gnexus.install
+    install -Dm644 deploy/linux/71-gnexus-record.rules "$pkgdir/usr/share/doc/gnexus/71-gnexus-record.rules"
+    install -Dm644 README.md "$pkgdir/usr/share/doc/gnexus/README.md"
+    install -Dm644 LICENSE-MIT "$pkgdir/usr/share/licenses/gnexus/LICENSE-MIT"
+    install -Dm644 LICENSE-APACHE "$pkgdir/usr/share/licenses/gnexus/LICENSE-APACHE"
+}

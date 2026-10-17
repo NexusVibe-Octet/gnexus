@@ -1,0 +1,23 @@
+[workspace]
+members = ["crates/g13-core", "crates/g13-apo", "crates/g13-daemon", "crates/g13-dsp", "crates/g13-gui", "crates/logi-hidpp"]
+resolver = "3"
+
+[workspace.package]
+edition = "2024"
+license = "MIT OR Apache-2.0"
+
+[workspace.dependencies]
+g13-core = { path = "crates/g13-core" }
+logi-hidpp = { path = "crates/logi-hidpp" }
+g13-dsp = { path = "crates/g13-dsp" }
+hidapi = "2.6"
+
+# Root package: the protocol-explorer CLI (probe / monitor / rgb / leds / text / demo).
+[package]
+name = "g13-driver"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+hidapi = { workspace = true }
+g13-core = { workspace = true }

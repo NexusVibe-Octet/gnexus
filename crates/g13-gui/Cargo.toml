@@ -1,0 +1,40 @@
+[package]
+name = "g13-gui"
+version = "1.0.0"
+edition.workspace = true
+license.workspace = true
+description = "Logitech G13 configuration app (Tauri) — embeds the g13-daemon engine"
+
+[[bin]]
+name = "g13-studio"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+g13-core = { workspace = true }
+g13-daemon = { path = "../g13-daemon" }
+g13-dsp = { workspace = true }
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-autostart = "2"
+tauri-plugin-single-instance = "2"
+tauri-plugin-opener = "2"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
+toml = "1.1"
+log = "0.4"
+env_logger = "0.11"
+# detect Logitech Gaming Software, which grabs the G13's input reports
+sysinfo = { version = "0.39", default-features = false, features = ["system"] }
+# file pickers for LGS profile import / export
+tauri-plugin-dialog = "2"
+chrono = { version = "0.4.45", default-features = false, features = ["clock"] }
+
+[target.'cfg(unix)'.dependencies]
+# SIGTERM / SIGHUP (logout, kill) → clean exit, every key released
+ctrlc = { version = "3.4", features = ["termination"] }
+
+[target.'cfg(windows)'.dependencies]
+# the equalizer audio effect: installed from G Nexus (setup code; the DLL is embedded by build.rs)
+g13-apo = { path = "../g13-apo" }

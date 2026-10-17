@@ -1,0 +1,8 @@
+[package]
+name = "g13-core"
+version = "0.1.0"
+edition = "2024"
+description = "Core OS-independent protocol parser and framebuffer renderer for Logitech G13"
+license = "MIT OR Apache-2.0"
+
+[dependencies]

@@ -1,0 +1,10 @@
+# G Nexus — OPTIONNEL : enregistrement des macros (bouton RECORD) sous Linux.
+# Donne à l'utilisateur de la session active la lecture des claviers et souris
+# (/dev/input/event*), comme le groupe `input` mais limité à la session locale active
+# (ACL systemd-logind, retirée au changement d'utilisateur).
+# Contrepartie : tout programme lancé par cet utilisateur peut alors lire la frappe
+# (comme sous X11). Sans cette règle, tout G Nexus fonctionne sauf RECORD.
+# Le nom doit trier AVANT 73-seat-late.rules ; ID_INPUT_* est posé par 60-input-id.rules.
+
+SUBSYSTEM=="input", KERNEL=="event*", ENV{ID_INPUT_KEYBOARD}=="1", TAG+="uaccess"
+SUBSYSTEM=="input", KERNEL=="event*", ENV{ID_INPUT_MOUSE}=="1", TAG+="uaccess"

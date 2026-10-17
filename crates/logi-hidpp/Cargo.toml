@@ -1,0 +1,8 @@
+[package]
+name = "logi-hidpp"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+description = "OS-independent Logitech HID++ 2.0 protocol: message framing, features, replies (G502 X…)"
+
+[dependencies]

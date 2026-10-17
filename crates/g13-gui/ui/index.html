@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>G Nexus</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" class="brand-hex"><path d="M12 1.5 21.5 7v10L12 22.5 2.5 17V7z"/></svg>
+      <span>G <b>NEXUS</b></span>
+    </div>
+
+    <nav class="dev-tabs" id="dev-tabs">
+      <button data-dev="g13" class="on"><svg class="ic-g13" viewBox="60 10 640 912"><path d="M210 24 L550 24 Q588 24 600 58 L640 168 Q646 186 662 198 L676 214 Q688 228 686 248 L677 362 Q674 382 656 398 L572 520 Q556 548 558 600 L648 836 Q666 896 610 908 L150 908 Q94 896 112 836 L202 600 Q204 548 188 520 L104 398 Q86 382 83 362 L74 248 Q72 228 84 214 L98 198 Q114 186 120 168 L160 58 Q172 24 210 24 Z"/><path d="M260 70 H500 V150 H260 Z"/><path d="M107 236 H653 L643 368 Q640 382 610 386 L518 516 H242 L150 386 Q120 382 117 368 Z"/><path d="M150 270 H610 M180 320 H580 M210 370 H550"/><path d="M222 652 L538 652 Q554 652 560 666 L630 846 Q636 884 600 886 L160 886 Q124 884 130 846 L200 666 Q206 652 222 652 Z"/><circle cx="560" cy="575" r="40"/></svg>G13</button>
+      <button data-dev="mouse" class="off"><svg class="ic-mouse" viewBox="98 220 354 572"><path d="M271 236 L322 226 L329 233 Q372 248 400 269 Q424 335 436 418 Q444 480 438 552 Q446 615 443 662 Q436 710 412 745 Q375 785 295 785 Q222 784 190 735 Q172 695 158 656 Q135 630 106 604 Q104 545 123 477 L141 462 Q142 405 153 352 Q166 298 182 267 Q224 248 271 236 Z"/><path d="M271 236 L271 515 Q271 526 282 526 L322 515 Q332 512 332 500 L329 233 M175 533 L271 495 M332 480 L424 449"/><rect x="286" y="322" width="28" height="78" rx="12"/></svg><span id="mouse-tab-name" class="mouse-tab-name">SOURIS</span><i id="mouse-batt" class="mouse-batt"></i></button>
+      <button data-dev="headset" class="off"><svg class="ic-headset" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="2.5" y="13.5" width="4.5" height="7" rx="2"/><rect x="17" y="13.5" width="4.5" height="7" rx="2"/><path d="M4.5 20.5c0 1.6 2.4 2.2 6 2"/></svg><span class="headset-tab-name">CASQUE</span><i class="headset-batt"></i></button>
+    </nav>
+
+    <div class="status">
+      <div class="chip" id="status-chip"><i class="dot"></i><span id="status-text">G13 non détecté</span></div>
+      <div class="active-line">Actif : <b id="active-profile">—</b></div>
+    </div>
+
+    <button class="icon-btn gear" id="btn-settings" title="Paramètres">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    </button>
+  </header>
+
+  <!-- the profile of the device shown (G13, mouse or headset) and what can be done with it -->
+  <div class="profile-row">
+    <div class="profile-bar">
+      <span class="cap" id="profile-num">PROFIL</span>
+      <span class="profile-title" id="profile-name">—</span>
+      <button class="icon-btn" id="btn-new" title="Nouveau profil"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="icon-btn" id="btn-dup" title="Dupliquer le profil"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button>
+      <button class="icon-btn" id="btn-rename" title="Renommer le profil"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg></button>
+      <button class="icon-btn" id="btn-default" title="Profil par défaut (utilisé quand aucune application associée n'a le focus)"><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg></button>
+      <span class="hsep"></span>
+      <button class="icon-btn" id="btn-import" title="Importer un profil Logitech Gaming Software (.xml)"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/></svg></button>
+      <button class="icon-btn" id="btn-export" title="Exporter ce profil vers Logitech Gaming Software (.xml)"><svg viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 17v3h16v-3"/></svg></button>
+      <span class="hsep"></span>
+      <button class="icon-btn" id="btn-clear" title="Effacer les touches du profil (menu affiché ou M1 à M3)"><svg viewBox="0 0 24 24"><path d="m15 4 5 5-9.5 9.5H6L3.5 16a1.5 1.5 0 0 1 0-2.1z"/><path d="m9 10 5 5M11 20h9"/></svg></button>
+      <button class="icon-btn danger" id="btn-delete" title="Supprimer le profil"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+    </div>
+
+    <!-- the same bar for the mouse (shown on the mouse page) -->
+    <div class="profile-bar ms-pbar">
+      <span class="cap" id="ms-pnum">PROFIL</span>
+      <span class="profile-title" id="ms-pname">—</span>
+      <button class="icon-btn ms-host-only" id="ms-new" title="Nouveau profil"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="icon-btn ms-host-only" id="ms-dup" title="Dupliquer le profil"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button>
+      <button class="icon-btn ms-host-only" id="ms-rename" title="Renommer le profil"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg></button>
+      <span class="hsep"></span>
+      <button class="icon-btn ms-import-btn" title="Charger un profil de souris exporté (fichier .g13mouse) dans le profil affiché"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/></svg></button>
+      <button class="icon-btn ms-export-btn" title="Enregistrer le profil affiché dans un fichier .g13mouse"><svg viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 17v3h16v-3"/></svg></button>
+      <span class="hsep"></span>
+      <button class="icon-btn" id="ms-clear" title="Effacer les boutons du profil (clic gauche, clic droit et molette gardés)"><svg viewBox="0 0 24 24"><path d="m15 4 5 5-9.5 9.5H6L3.5 16a1.5 1.5 0 0 1 0-2.1z"/><path d="m9 10 5 5M11 20h9"/></svg></button>
+      <button class="icon-btn danger ms-host-only" id="ms-delete" title="Supprimer le profil"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+    </div>
+
+    <!-- the same bar for the headset's equalizer profiles -->
+    <div class="profile-bar hs-pbar">
+      <span class="cap" id="hs-pnum">PROFIL</span>
+      <span class="profile-title" id="hs-pname">—</span>
+      <button class="icon-btn" id="hs-new" title="Nouveau profil"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="icon-btn" id="hs-dup" title="Dupliquer le profil"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button>
+      <button class="icon-btn" id="hs-rename" title="Renommer le profil"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg></button>
+      <span class="hsep"></span>
+      <button class="icon-btn hs-eq-import" title="Importer un profil d'égaliseur (fichier .gneq) : il est ajouté aux profils"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/></svg></button>
+      <button class="icon-btn hs-eq-export" title="Exporter le profil d'égaliseur affiché (fichier .gneq)"><svg viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 17v3h16v-3"/></svg></button>
+      <span class="hsep"></span>
+      <button class="icon-btn danger" id="hs-delete" title="Supprimer le profil"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+    </div>
+  </div>
+
+  <!-- in-game overlay header (only in the overlay window) -->
+  <div class="overlay-head" id="overlay-head">
+    <span class="ov-cap">OVERLAY</span>
+    <!-- the device tabs of the main window (copied at start-up) -->
+    <nav class="dev-tabs ov-devs" id="ov-devs"></nav>
+    <span class="ov-name" id="ov-name">—</span>
+    <div class="ov-profiles" id="ov-profiles" title="Profils"></div>
+    <button class="icon-btn" id="ov-close" title="Revenir au jeu (G25 ou Échap)"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="overlay-game" id="overlay-game">
+    <span id="ov-game-text"></span>
+    <button class="ghost small hidden" id="ov-assign">ASSOCIER À CE JEU</button>
+    <span class="ov-hint" data-i18n-html><b id="ov-key">G25</b> ou <b>Échap</b> : retour au jeu</span>
+  </div>
+
+  <div class="banner hidden" id="conflict-banner">
+    <svg viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>
+    <span id="conflict-text"></span>
+    <button class="ghost small" id="conflict-close">FERMER CES LOGICIELS</button>
+  </div>
+
+  <!-- where the edited profile applies outside this window -->
+  <div class="scope-bar" id="scope-bar">
+    <i class="dot"></i><span id="scope-text"></span>
+    <button class="ghost small" id="scope-pin" title="Garde ce profil actif sur le G13 dans toutes les applications, le temps de l'essayer (associations et profil par défaut ignorés)">TESTER PARTOUT</button>
+    <button class="ghost small hidden" id="scope-default">UTILISER PAR DÉFAUT</button>
+    <button class="ghost small hidden" id="scope-app">ASSOCIER À UN JEU</button>
+  </div>
+
+  <main class="stage" id="stage">
+    <aside class="rail">
+      <div class="rail-group">
+        <span class="rail-cap">MODE STICK</span>
+        <div class="pill" id="stick-mode">
+          <button class="pill-btn" data-mode="keys" title="Stick en mode clavier : les 4 directions sont des touches assignables"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg></button>
+          <button class="pill-btn" data-mode="gamepad" title="Stick en mode manette : il devient le joystick analogique d'une manette Xbox 360 virtuelle"><svg viewBox="0 0 24 24"><path d="M6 9h4M8 7v4M15 10h.01M18 8h.01"/><path d="M17.3 5H6.7a4 4 0 0 0-4 3.6L2 15a3 3 0 0 0 5.2 2l1.5-1.5h6.6l1.5 1.5A3 3 0 0 0 22 15l-.7-6.4A4 4 0 0 0 17.3 5z"/></svg></button>
+        </div>
+        <span class="soon" id="stick-mode-label">CLAVIER</span>
+      </div>
+
+      <div class="rail-group banks">
+        <span class="rail-cap">MENUS</span>
+        <div class="bank-list" id="bank-list">
+          <button class="bank" data-bank="M1">M1</button>
+          <button class="bank" data-bank="M2">M2</button>
+          <button class="bank" data-bank="M3">M3</button>
+        </div>
+        <span class="rail-tag" id="bank-label-text">MENU M1</span>
+      </div>
+    </aside>
+
+    <section class="device-wrap" id="device-wrap">
+      <div id="device"></div>
+      <div class="offline" id="offline">
+        <div class="offline-chip">G13 NON DÉTECTÉ</div>
+        <p class="win-only">Branchez le G13. S'il est branché, fermez Logitech Gaming Software / G HUB : ils captent ses touches.</p>
+        <p class="linux-only">Branchez le G13. S'il est branché, vérifiez que les règles udev de G Nexus sont installées : elles donnent l'accès au G13 sans droits administrateur.</p>
+        <button class="ghost" id="offline-edit">CONFIGURER HORS LIGNE</button>
+      </div>
+    </section>
+
+    <aside class="rail right">
+      <div class="rail-group profiles">
+        <div class="bank-list" id="profile-list"></div>
+        <span class="rail-tag" id="profile-label-text"></span>
+        <span class="rail-cap">PROFILS</span>
+      </div>
+    </aside>
+  </main>
+
+  <!-- headset page (PRO X Wireless…): settings kept by the headset itself -->
+  <main class="headset-page" id="headset-page">
+    <div class="scope-bar hs-bar">
+      <i class="dot"></i>
+      <span><b id="hs-name">—</b> <span class="ms-state" id="hs-state"></span></span>
+      <div class="ms-batt"><svg class="ms-chg hidden" id="hs-batt-chg" viewBox="0 0 24 24"><path d="M13 2 5 13h6l-2 9 8-11h-6z"/></svg><div class="ms-batt-bar"><i id="hs-batt-fill"></i></div><b id="hs-batt-val">—</b></div>
+    </div>
+    <div class="hs-stage">
+      <aside class="rail hs-rail">
+        <div class="rail-group profiles">
+          <span class="rail-cap">ÉGALISEUR</span>
+          <div class="bank-list" id="hs-eqp"></div>
+          <span class="rail-tag" id="hs-eqp-label"></span>
+        </div>
+      </aside>
+      <section class="hs-visual"><div class="mdev hdev" id="hdev"></div></section>
+      <section class="hs-panels">
+        <div class="hs-card">
+          <div class="hs-cap">VOLUME</div>
+          <p class="muted small-print" id="hs-vol-dev">—</p>
+          <div class="hs-row hs-vol">
+            <button class="icon-btn" id="hs-mute" title="Couper / remettre le son"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w1" d="M16 9a4 4 0 0 1 0 6"/><path class="w2" d="M18.5 6.5a8 8 0 0 1 0 11"/><path class="x" d="M16 9l5 6M21 9l-5 6"/></svg></button>
+            <input type="range" id="hs-volume" min="0" max="100" step="1"><b id="hs-volume-val">—</b>
+          </div>
+        </div>
+        <div class="hs-card">
+          <div class="hs-cap">MISE EN VEILLE</div>
+          <p class="muted small-print">Le casque s'éteint seul après ce délai sans son.</p>
+          <div class="seg wrap" id="hs-sleep"></div>
+        </div>
+        <div class="hs-card">
+          <div class="hs-cap">ÉGALISEUR</div>
+          <p class="muted small-print" id="hs-eq-help">L'égaliseur de G Nexus, appliqué en direct au son du casque, même G Nexus fermé.</p>
+          <div class="hs-eq-setup hidden" id="hs-eq-setup">
+            <p class="small-print linux-only">Pour régler le son du casque, G Nexus place une seule fois un filtre PipeWire devant la sortie du casque. Aucun droit administrateur n'est demandé et la sortie audio par défaut ne change pas.</p>
+            <p class="small-print win-only">Pour régler le son du casque, G Nexus ajoute une seule fois son module audio à la sortie du casque. Windows demande l'autorisation administrateur, puis le son se coupe une seconde (redémarrage du service audio). L'effet Logitech déjà présent n'est pas modifié.</p>
+            <button class="primary" id="hs-eq-install">INSTALLER L'ÉGALISEUR</button>
+          </div>
+          <div class="hs-eq-scope" id="hs-eq-scope">
+            <span id="hs-eq-scope-text"></span>
+            <span class="hs-eq-scope-btns">
+              <button class="ghost small" id="hs-pin" title="Garde ce profil actif sur le casque dans toutes les applications, le temps de l'essayer (associations et profil par défaut ignorés)">TESTER PARTOUT</button>
+              <button class="ghost small" id="hs-default">UTILISER PAR DÉFAUT</button>
+              <button class="ghost small" id="hs-assign">ASSOCIER À UN JEU</button>
+            </span>
+          </div>
+          <div class="seg wrap" id="hs-presets"></div>
+          <div class="eq" id="hs-eq"></div>
+          <details class="hs-eq-apps" id="hs-eq-apps">
+            <summary class="group-cap">APPLICATIONS DE CE PROFIL</summary>
+            <div class="app-chips" id="hs-apps-bound"></div>
+            <div class="group-cap">Choisir une application détectée <button class="link small-link" id="hs-apps-browse">parcourir…</button></div>
+            <div class="app-chips" id="hs-apps-detected"></div>
+          </details>
+          <p class="hs-eq-foot">
+            <button class="link small-link hidden" id="hs-eq-reinstall">RÉINSTALLER</button>
+            <button class="link small-link hidden" id="hs-eq-uninstall">DÉSINSTALLER L'ÉGALISEUR</button>
+          </p>
+        </div>
+        <details class="hs-card hs-mic">
+          <summary class="hs-cap">MICRO · RETOUR</summary>
+          <p class="muted small-print">Votre propre voix dans le casque, pour ne pas parler trop fort (micro du casque branché).</p>
+          <div class="hs-row"><input type="range" id="hs-sidetone" min="0" max="100" step="1"><b id="hs-sidetone-val">—</b></div>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <!-- mouse page (G502 X PLUS…), shown instead of the G13: same layout as the G13's -->
+  <main class="mouse-page" id="mouse-page">
+    <div class="banner ms-ghub hidden" id="ms-ghub">
+      <svg viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>
+      <span>G HUB est ouvert : il pilote la souris et effacerait ces réglages. Fermez-le (icône de notification › Quitter) pour régler la souris ici.</span>
+    </div>
+    <div class="scope-bar ms-bar">
+      <i class="dot"></i>
+      <span><b id="ms-name">—</b> <span class="ms-state" id="ms-state"></span></span>
+      <button class="ghost small hidden" id="ms-pin" title="Garde ce profil actif sur la souris dans toutes les applications, le temps de l'essayer (associations et profil par défaut ignorés)">TESTER PARTOUT</button>
+      <button class="ghost small hidden" id="ms-default">UTILISER PAR DÉFAUT</button>
+      <button class="ghost small hidden" id="ms-assign">ASSOCIER À UN JEU</button>
+      <div class="ms-batt"><svg class="ms-chg hidden" id="ms-batt-chg" viewBox="0 0 24 24"><path d="M13 2 5 13h6l-2 9 8-11h-6z"/></svg><div class="ms-batt-bar"><i id="ms-batt-fill"></i></div><b id="ms-batt-val">—</b></div>
+    </div>
+    <div class="ms-stage">
+      <aside class="rail">
+        <div class="rail-group profiles">
+          <span class="rail-cap">PROFILS</span>
+          <div class="bank-list" id="ms-soft"></div>
+          <span class="rail-tag ms-lock" id="ms-soft-label"></span>
+        </div>
+      </aside>
+      <section class="ms-center">
+        <div class="mdev" id="mdev"></div>
+        <button class="link" id="ms-advanced">PARAMÈTRES AVANCÉS <i class="chev"></i></button>
+        <p class="muted small-print ms-help" id="ms-layer-help">Cliquez sur un bouton pour lui donner une touche (avec Ctrl, Maj, Alt ou Win), un bouton de souris, une touche multimédia ou une fonction de la souris.</p>
+        <p class="muted small-print ms-help hidden" id="ms-gshift-help">G-SHIFT : ce que font les boutons tant que le bouton G-shift est maintenu.</p>
+        <p class="small-print ms-note ms-help hidden" id="ms-gshift-none">Aucun bouton n'a la fonction G-shift dans ce profil : cette couche ne sert que si vous en attribuez un (onglet SOURIS › G-shift).</p>
+      </section>
+      <aside class="rail right">
+        <div class="seg ms-layer" id="ms-layer">
+          <button class="on" data-layer="normal" title="Ce que font les boutons">NORMAL</button>
+          <button data-layer="gshift" title="Ce que font les boutons tant que le bouton G-shift est maintenu">G-SHIFT</button>
+        </div>
+      </aside>
+    </div>
+    <footer class="ms-foot">
+      <span class="ms-dirty ms-dirty-text"></span>
+      <button class="ghost ms-revert">ANNULER LES MODIFICATIONS</button>
+      <button class="primary ms-save">ENREGISTRER DANS LA SOURIS</button>
+    </footer>
+  </main>
+
+  <!-- mouse: advanced settings -->
+  <section class="sheet tall" id="ms-adv">
+    <div class="sheet-head">
+      <div class="target"><span class="target-key">PARAMÈTRES AVANCÉS</span><span class="target-bank" id="ms-adv-sub"></span></div>
+      <button class="icon-btn" data-close title="Fermer"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <nav class="tabs" id="ms-adv-tabs">
+      <button data-tab="dpi" class="on">SENSIBILITÉ</button>
+      <button data-tab="light">ÉCLAIRAGE</button>
+      <button data-tab="rate">FRÉQUENCE</button>
+      <button data-tab="onboard">PROFILS INTÉGRÉS</button>
+      <button data-tab="apps" class="hidden">APPLICATIONS</button>
+      <button data-tab="macros">MACROS</button>
+    </nav>
+    <div class="tab-body" data-pane="dpi">
+      <p class="muted small-print">Cliquez sur la barre pour poser un palier (5 au plus), faites glisser un marqueur ou tapez sa valeur. Les boutons DPI + et DPI − de la souris passent d'un palier à l'autre.</p>
+      <div class="dpi-bar" id="dpi-bar"><div class="dpi-track"></div><div class="dpi-ticks" id="dpi-ticks"></div></div>
+      <div class="dpi-edit" id="dpi-edit"></div>
+    </div>
+    <div class="tab-body hidden" data-pane="light">
+      <div class="seg wrap" id="ms-effects">
+        <button data-fx="gradient">DÉGRADÉ</button><button data-fx="fixed">FIXE</button>
+        <button data-fx="breathing">RESPIRATION</button><button data-fx="cycle">CYCLE DE COULEURS</button><button data-fx="signature">EFFET D'USINE</button><button data-fx="off">ÉTEINT</button>
+      </div>
+      <div class="ms-preview" id="ms-preview"></div>
+      <div class="ms-row hidden" id="ms-color-row"><button class="ms-swatch" id="ms-color"></button><code id="ms-color-val"></code></div>
+      <div class="ms-row hidden" id="ms-grad-row">
+        <button class="ms-swatch" id="ms-grad-a"></button><span class="muted">→</span><button class="ms-swatch" id="ms-grad-b"></button>
+        <span class="grow"></span><button class="ghost small" id="ms-grad-rev">INVERSER LE SENS</button>
+      </div>
+      <div class="ms-row hidden" id="ms-speed-row"><span>Durée d'un cycle</span><input type="range" id="ms-speed" min="1" max="20" step="1"><b id="ms-speed-val"></b></div>
+      <p class="muted small-print hidden" id="ms-other">Effet réglé par un autre logiciel : choisissez-en un pour le remplacer.</p>
+      <p class="muted small-print hidden" id="ms-grad-note">Le dégradé est animé par G Nexus, comme dans G HUB : sans G Nexus, la souris affiche son effet d'usine.</p>
+    </div>
+    <div class="tab-body hidden" data-pane="rate">
+      <div class="seg" id="ms-rate"><button data-hz="125">125 Hz</button><button data-hz="250">250 Hz</button><button data-hz="500">500 Hz</button><button data-hz="1000">1000 Hz</button></div>
+      <p class="muted small-print">1000 Hz : le plus réactif. Une fréquence plus basse économise la batterie.</p>
+      <p class="small-print ms-note hidden" id="ms-rate-note">La fréquence s'applique à l'enregistrement : la souris ne la change en direct que lorsqu'un logiciel la pilote entièrement.</p>
+    </div>
+    <div class="tab-body hidden" data-pane="onboard">
+      <label class="toggle"><input type="checkbox" id="ms-onboard-on" checked><i></i><span>Utiliser les profils intégrés de la souris</span></label>
+      <p class="muted small-print">Activé : la souris suit le profil intégré choisi ci-dessous, qu'elle garde même sans G Nexus, et son bouton de profil passe d'un profil activé à l'autre. Choisissez un profil pour afficher et modifier ses boutons.</p>
+      <p class="small-print ms-note">Désactivé : G Nexus pilote la souris en temps réel avec ses propres profils (pastilles PROFILS, un par jeu, le 1 partout ailleurs), sans rien enregistrer dans la souris. G Nexus doit rester ouvert ; à sa fermeture, la souris reprend ses profils intégrés.</p>
+      <div class="ms-onboard" id="ms-onboard-list"></div>
+    </div>
+    <div class="tab-body hidden" data-pane="apps">
+      <p class="muted small-print" id="ms-apps-help"></p>
+      <div class="group-cap">ASSOCIÉES À CE PROFIL</div>
+      <div class="app-chips" id="ms-apps-bound"></div>
+      <div class="group-cap">Choisir une application détectée <button class="link small-link" id="ms-apps-refresh">actualiser</button>
+        <button class="link small-link" id="ms-apps-browse">parcourir…</button></div>
+      <div class="app-chips" id="ms-apps-detected"></div>
+    </div>
+    <div class="tab-body hidden" data-pane="macros">
+      <p class="small-print ms-note hidden" id="ms-macros-off">Les macros de la souris marchent en temps réel : décochez « Utiliser les profils intégrés de la souris » (onglet PROFILS INTÉGRÉS). La mémoire de la souris ne les garde pas.</p>
+      <div class="macro-layout" id="ms-macros">
+        <div class="macro-list" id="ms-macro-list"></div>
+        <div class="macro-edit" id="ms-macro-edit"></div>
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <span class="ms-dirty ms-dirty-text"></span>
+      <button class="ghost ms-revert">ANNULER LES MODIFICATIONS</button>
+      <button class="primary ms-save">ENREGISTRER DANS LA SOURIS</button>
+    </div>
+  </section>
+
+  <footer class="bottom">
+    <button class="link" id="btn-advanced">PARAMÈTRES AVANCÉS <i class="chev"></i></button>
+  </footer>
+
+  <!-- action picker (bottom sheet) -->
+  <div class="scrim" id="scrim"></div>
+  <section class="sheet" id="picker">
+    <div class="sheet-head">
+      <div class="target"><span class="target-key" id="picker-key">G1</span><span class="target-bank" id="picker-bank">BANQUE M1</span>
+        <span class="target-cur">actuel : <b id="picker-current">—</b></span></div>
+      <button class="icon-btn" data-close title="Fermer"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="picker-main">
+    <aside class="dance hidden" id="picker-dance">
+      <span class="cap">MODES DE LA TOUCHE</span>
+      <div class="dance-grid" id="dance-grid"></div>
+      <p class="muted dance-hint">Choisissez un mode, puis son action. Hold et Tap-Hold se déclenchent après 200 ms ; un Tap attend alors un éventuel second appui.</p>
+    </aside>
+    <div class="picker-right">
+    <nav class="tabs" id="picker-tabs">
+      <button data-tab="keyboard" class="on">CLAVIER</button>
+      <button data-tab="basic">TOUCHES</button>
+      <button data-tab="media">MÉDIA</button>
+      <button data-tab="mouse">SOURIS</button>
+      <button data-tab="pad">MANETTE</button>
+      <button data-tab="macros">MACROS</button>
+    </nav>
+    <div class="mods" id="mods">
+      <span class="cap">COMBINAISON</span>
+      <button data-mod="LeftCtrl">Ctrl</button><button data-mod="LeftShift">Maj</button><button data-mod="LeftAlt">Alt</button><button data-mod="LeftMeta">Win</button>
+      <span class="hint">activez un modificateur puis choisissez une touche (ex. Ctrl + C)</span>
+    </div>
+    <div class="tab-body" id="picker-body"></div>
+    </div>
+    </div>
+    <div class="sheet-foot">
+      <button class="ghost" id="picker-none">AUCUNE ACTION</button>
+    </div>
+  </section>
+
+  <!-- advanced settings: app rules + macros -->
+  <section class="sheet tall" id="advanced">
+    <div class="sheet-head">
+      <div class="target"><span class="target-key">PARAMÈTRES AVANCÉS</span><span class="target-bank" id="adv-profile"></span></div>
+      <button class="icon-btn" data-close title="Fermer"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <nav class="tabs" id="adv-tabs">
+      <button data-tab="apps" class="on">APPLICATIONS</button>
+      <button data-tab="macros">MACROS</button>
+    </nav>
+    <div class="tab-body" id="adv-apps">
+      <p class="muted" data-i18n-html>Ce profil s'active tout seul quand l'une de ces applications a le focus. Sinon, le profil par défaut <span class="star">★</span> est utilisé.</p>
+      <div id="rules"></div>
+      <div class="detected">
+        <div class="group-cap">Choisir une application détectée <button class="link small-link" id="apps-refresh">actualiser</button></div>
+        <div class="app-chips" id="apps-running"></div>
+        <div class="group-cap" id="apps-recent-cap">Récemment utilisées</div>
+        <div class="app-chips" id="apps-recent"></div>
+      </div>
+      <button class="ghost small" id="rule-browse">PARCOURIR… (CHOISIR UN .EXE)</button>
+      <button class="ghost small" id="rule-add">+ SAISIR UN NOM D'EXÉCUTABLE</button>
+    </div>
+    <div class="tab-body hidden" id="adv-macros">
+      <div class="macro-layout">
+        <div class="macro-list" id="macro-list"></div>
+        <div class="macro-edit" id="macro-edit"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- settings -->
+  <section class="modal" id="settings">
+    <div class="sheet-head">
+      <div class="target"><span class="target-key">PARAMÈTRES</span></div>
+      <button class="icon-btn" data-close title="Fermer"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <nav class="tabs" id="set-tabs">
+      <button data-tab="general" class="on">GÉNÉRAL</button>
+      <button data-tab="g13">CLAVIER G13</button>
+      <button data-tab="mouse">SOURIS</button>
+      <button data-tab="headset">CASQUE</button>
+      <button data-tab="about">À PROPOS</button>
+    </nav>
+    <div class="set-pane" data-pane="general">
+    <div class="set-row">
+      <span>Langue de l'interface</span>
+      <select id="set-lang">
+        <option value="">Langue du système</option>
+        <option value="fr">Français</option>
+        <option value="en">English</option>
+        <option value="de">Deutsch</option>
+        <option value="it">Italiano</option>
+        <option value="es">Español</option>
+      </select>
+    </div>
+    <div class="set-row">
+      <span>Clavier affiché pour choisir une touche</span>
+      <select id="set-layout">
+        <option value="">Selon la langue</option>
+        <option value="azerty">AZERTY (français)</option>
+        <option value="us">QWERTY (États-Unis)</option>
+        <option value="qwertz">QWERTZ (allemand)</option>
+        <option value="it">QWERTY (italien)</option>
+        <option value="es">QWERTY (espagnol)</option>
+      </select>
+    </div>
+    <label class="toggle"><input type="checkbox" id="set-autostart"><i></i><span class="win-only">Lancer G Nexus au démarrage de Windows</span><span class="linux-only">Lancer G Nexus à l'ouverture de session</span></label>
+    <label class="toggle"><input type="checkbox" id="set-minimized"><i></i><span class="win-only">Au démarrage de Windows, rester réduit dans la zone de notification</span><span class="linux-only">À l'ouverture de session, rester réduit dans la zone de notification</span></label>
+    <label class="toggle"><input type="checkbox" id="set-tray"><i></i><span>Fermer la fenêtre la réduit dans la zone de notification (le G13 reste actif)</span></label>
+    </div>
+    <div class="set-pane hidden" data-pane="g13">
+    <div class="set-row">
+      <span data-i18n-html>Touche d'ouverture de l'<b>overlay en jeu</b> (configure les touches sans quitter le jeu)</span>
+      <select id="set-overlay"></select>
+    </div>
+    <div class="set-row">
+      <span>Position de l'overlay à l'écran</span>
+      <select id="set-overlay-pos">
+        <option value="left">À gauche</option>
+        <option value="center">Au centre</option>
+        <option value="right">À droite</option>
+      </select>
+    </div>
+    <p class="muted small-print linux-only">Cette touche est réservée à l'overlay dans tous les profils. Sous KDE Plasma, l'overlay s'affiche par-dessus les jeux en mode fenêtré ou plein écran fenêtré ; ailleurs, il s'ouvre comme une fenêtre ordinaire.</p>
+    <p class="muted small-print win-only">Cette touche est réservée à l'overlay dans tous les profils. L'overlay s'affiche par-dessus les jeux en mode fenêtré ou plein écran fenêtré ; en plein écran exclusif, Windows réduit le jeu le temps de la configuration.</p>
+    <div class="set-dir">
+      <span class="cap">DOSSIER DES PROFILS</span>
+      <code id="set-dir">—</code>
+      <button class="ghost small" id="set-open-dir">OUVRIR</button>
+    </div>
+    <p class="muted small-print">Les profils sont des fichiers TOML modifiables à la main ; les changements sont appliqués immédiatement.</p>
+    </div>
+    <div class="set-pane hidden" data-pane="mouse">
+    <div class="set-dir">
+      <span class="cap">PROFIL DE LA SOURIS</span>
+      <button class="ghost small ms-export-btn" id="ms-export">EXPORTER</button>
+      <button class="ghost small ms-import-btn" id="ms-import">IMPORTER</button>
+    </div>
+    <p class="muted small-print">Exporter : le profil affiché sur la page Souris (paliers DPI, fréquence, éclairage, boutons et G-shift) dans un fichier. Importer : charge un fichier dans le profil affiché ; vérifiez puis « Enregistrer dans la souris ».</p>
+    <p class="muted small-print">G HUB doit rester fermé pendant que G Nexus règle la souris : il reprendrait la main sur elle.</p>
+    </div>
+    <div class="set-pane hidden about" data-pane="about">
+      <div class="about-head"><span class="about-name">G NEXUS</span><span class="muted" id="about-version">—</span></div>
+      <p>G Nexus remplace Logitech Gaming Software et G HUB pour le clavier G13, la souris G502 X PLUS et le casque PRO X Wireless : touches et macros, profils par jeu, éclairage, écran LCD du G13 et égaliseur du casque, sous Windows et Linux.</p>
+      <p class="muted small-print">Logiciel libre et gratuit. Si G Nexus vous est utile, vous pouvez soutenir son développement par un don.</p>
+      <div class="set-dir">
+        <button class="ghost small" id="about-github">CODE SOURCE (GITHUB)</button>
+        <button class="kofi-btn" id="about-kofi" title="Faire un don sur Ko-fi"><img src="kofi.png" alt="Buy Me a Coffee at ko-fi.com"></button>
+      </div>
+      <p class="muted small-print">Design inspiré par la chaîne YouTube <a href="#" id="about-jasp">JaspMakes</a>.</p>
+      <p class="muted small-print">G Nexus n'est pas affilié à Logitech. Logitech, G13, G502 et PRO X sont des marques de Logitech.</p>
+    </div>
+    <div class="set-pane hidden" data-pane="headset">
+    <p class="muted small-print">Logitech PRO X Wireless : batterie, retour micro, mise en veille automatique et égaliseur intégré se règlent sur la page Casque (onglet CASQUE en haut). Ces réglages sont gardés par le casque.</p>
+    <p class="muted small-print">G HUB doit rester fermé : il imposerait ses propres réglages au casque.</p>
+    <div class="set-dir">
+      <span class="cap">PROFILS D'ÉGALISEUR</span>
+      <button class="ghost small hs-eq-export">EXPORTER</button>
+      <button class="ghost small hs-eq-import">IMPORTER</button>
+    </div>
+    <p class="muted small-print">Exporter : le profil d'égaliseur affiché sur la page Casque, dans un fichier .gneq. Importer : ajoute le profil du fichier à vos profils d'égaliseur.</p>
+    </div>
+    <div class="set-pane" data-pane="general">
+    <div class="set-row">
+      <span>Sauvegarde automatique de toute la configuration (G13, souris, casque, macros)</span>
+      <select id="set-backup">
+        <option value="off">Désactivée</option>
+        <option value="daily">Chaque jour</option>
+        <option value="weekly">Chaque semaine</option>
+        <option value="monthly">Chaque mois</option>
+      </select>
+    </div>
+    <div class="set-row">
+      <span>Nombre de sauvegardes gardées (les plus anciennes sont supprimées)</span>
+      <input type="number" id="set-backup-keep" min="1" max="100" step="1" class="num-input">
+    </div>
+    <div class="set-dir">
+      <span class="muted backup-last" id="set-backup-last">—</span>
+      <button class="ghost small" id="set-backup-now">SAUVEGARDER MAINTENANT</button>
+      <button class="ghost small" id="set-backup-open">OUVRIR LE DOSSIER</button>
+    </div>
+    <p class="muted small-print">Une copie n'est faite que si la configuration a changé depuis la précédente. Pour revenir à une sauvegarde : CONFIGURATION › IMPORTER. Les profils de la souris, de l'égaliseur et les macros importés sont pris en compte au prochain démarrage de G Nexus.</p>
+    <div class="set-dir">
+      <span class="cap">CONFIGURATION</span>
+      <button class="ghost small" id="cfg-export">EXPORTER</button>
+      <button class="ghost small" id="cfg-import">IMPORTER</button>
+      <button class="ghost small danger-btn" id="cfg-reset">RÉINITIALISER</button>
+    </div>
+    <p class="muted small-print">Exporter : tous les profils et les paramètres dans un seul fichier. Importer remplace la configuration actuelle ; réinitialiser revient à l'état d'une première installation. Dans les deux cas, une copie de la configuration actuelle est d'abord enregistrée dans les sauvegardes automatiques.
+      <button class="link small-link" id="cfg-backups">SAUVEGARDES AUTOMATIQUES</button></p>
+    <p class="muted small-print">Pour quitter complètement, utilisez « Quitter » dans le menu de l'icône de notification.</p>
+    </div>
+  </section>
+
+  <!-- import / export report -->
+  <section class="modal" id="report">
+    <div class="sheet-head">
+      <div class="target"><span class="target-key" id="report-title">RAPPORT</span></div>
+      <button class="icon-btn" data-close title="Fermer"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <p id="report-text"></p>
+    <ul class="report-list" id="report-list"></ul>
+    <div class="row-end"><button class="primary" data-close>OK</button></div>
+  </section>
+
+  <!-- clear the bindings of the profile -->
+  <section class="modal small" id="clear">
+    <div class="sheet-head"><div class="target"><span class="target-key">EFFACER LES TOUCHES</span></div></div>
+    <p class="muted" id="clear-text"></p>
+    <div class="clear-choices">
+      <button class="ghost" id="clear-bank">MENU M1 SEULEMENT</button>
+      <button class="ghost danger-btn" id="clear-all">M1, M2 ET M3</button>
+    </div>
+    <div class="row-end"><button class="ghost" data-close>ANNULER</button></div>
+  </section>
+
+  <!-- small prompt dialog (name input) -->
+  <section class="modal small" id="prompt">
+    <div class="sheet-head"><div class="target"><span class="target-key" id="prompt-title">NOUVEAU PROFIL</span></div></div>
+    <input type="text" id="prompt-input" spellcheck="false">
+    <div class="row-end"><button class="ghost" id="prompt-cancel">ANNULER</button><button class="primary" id="prompt-ok">OK</button></div>
+  </section>
+
+  <!-- colour picker (centred) -->
+  <section class="modal small" id="colorpick">
+    <div class="sheet-head"><div class="target"><span class="target-key">COULEUR</span><span class="target-bank" id="cp-bank">MENU M1</span></div></div>
+    <div class="cp-presets" id="cp-presets"></div>
+    <canvas id="cp-sv" width="372" height="150"></canvas>
+    <input type="range" id="cp-hue" min="0" max="359" value="0">
+    <div class="cp-row"><span class="cp-swatch" id="cp-swatch"></span><input type="text" id="cp-hex" maxlength="7" spellcheck="false"></div>
+    <div class="row-end"><button class="ghost" id="cp-cancel">ANNULER</button><button class="primary" id="cp-ok">APPLIQUER</button></div>
+  </section>
+  <div class="toast" id="toast"></div>
+
+  <!-- outside Tauri (plain browser, UI development): fake back-end -->
+  <script>if (!window.__TAURI__) document.write('<script src="dev-mock.js"><\/script>');</script>
+  <script src="i18n.js"></script>
+  <script src="catalog.js"></script>
+  <script src="device.js"></script>
+  <script src="mouse-device.js"></script>
+  <script src="macro-editor.js"></script>
+  <script src="mouse.js"></script>
+  <script src="headset.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

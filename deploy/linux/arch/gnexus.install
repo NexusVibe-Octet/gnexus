@@ -1,0 +1,20 @@
+# G Nexus: after installation / upgrade / removal.
+# The udev rules are reloaded by pacman's own hook (35-systemd-udev-reload.hook).
+
+post_install() {
+    # virtual keyboard / mouse / gamepad: /dev/uinput (loaded at boot from now on)
+    modprobe uinput 2>/dev/null || true
+    cat <<'MSG'
+==> G Nexus : rebranchez le G13, la souris et le dongle du casque (ou redémarrez)
+    pour que les nouvelles règles udev leur donnent l'accès sans droits root.
+==> Facultatif, pour enregistrer des macros (bouton RECORD) : lecture des claviers
+    et souris par la session active (tout programme de l'utilisateur pourra alors
+    lire la frappe, comme sous X11) :
+      sudo install -m644 /usr/share/doc/gnexus/71-gnexus-record.rules /etc/udev/rules.d/
+      sudo udevadm control --reload && sudo udevadm trigger --subsystem-match=input
+MSG
+}
+
+post_upgrade() {
+    modprobe uinput 2>/dev/null || true
+}

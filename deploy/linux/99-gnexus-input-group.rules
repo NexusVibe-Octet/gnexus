@@ -1,0 +1,17 @@
+# G Nexus — variante par groupe : accès aux appareils pour le groupe `input`.
+# À utiliser seulement si `uaccess` (70-gnexus-uaccess.rules) ne convient pas : le groupe `input`
+# donne aussi la lecture de TOUS les claviers et souris. Installation : voir README.md.
+
+# G13 Advanced Gameboard
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c21c", MODE="0660", GROUP="input"
+SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c21c", MODE="0660", GROUP="input"
+
+# G502 X PLUS : câblée (c095) et récepteur LIGHTSPEED (c547)
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c095", MODE="0660", GROUP="input"
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c547", MODE="0660", GROUP="input"
+
+# Casque PRO X Wireless (dongle)
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="0aba", MODE="0660", GROUP="input"
+
+# /dev/uinput
+KERNEL=="uinput", SUBSYSTEM=="misc", MODE="0660", GROUP="input", OPTIONS+="static_node=uinput"

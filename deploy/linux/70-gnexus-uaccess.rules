@@ -1,0 +1,17 @@
+# G Nexus — accès sans root aux appareils Logitech pour l'utilisateur connecté (ACL de session
+# systemd-logind, `uaccess`). Recommandé. Le nom doit trier AVANT 73-seat-late.rules.
+# Installation : voir README.md.
+
+# G13 Advanced Gameboard (touches, stick, LED, RGB, LCD)
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c21c", TAG+="uaccess"
+SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c21c", TAG+="uaccess"
+
+# G502 X PLUS : câblée (c095) et récepteur LIGHTSPEED (c547), HID++ 2.0
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c095", TAG+="uaccess"
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c547", TAG+="uaccess"
+
+# Casque PRO X Wireless : dongle (0aba), HID++ 2.0
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="0aba", TAG+="uaccess"
+
+# /dev/uinput : clavier / souris / manette virtuels de G Nexus
+KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput"

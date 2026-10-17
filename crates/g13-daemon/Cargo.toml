@@ -1,0 +1,86 @@
+[package]
+name = "g13-daemon"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+description = "Background service for the Logitech G13: HID loop, key mapping, macros, LCD applets"
+
+[[bin]]
+name = "g13d"
+path = "src/main.rs"
+
+# Read-only HID++ explorer for Logitech mice (G502 X…): features, DPI, battery, onboard memory backup.
+[[bin]]
+name = "hidpp-probe"
+path = "src/bin/hidpp_probe.rs"
+
+# Guarded write experiments on a gaming mouse (test profile in a disabled slot, restore).
+[[bin]]
+name = "headset-lab"
+path = "src/bin/headset_lab.rs"
+
+[[bin]]
+name = "hidpp-lab"
+path = "src/bin/hidpp_lab.rs"
+
+[dependencies]
+g13-core = { workspace = true }
+logi-hidpp = { workspace = true }
+hidapi = { workspace = true }
+log = "0.4"
+env_logger = "0.11"
+ctrlc = "3.4"
+# Profiles: TOML files in the standard config directory.
+serde = { version = "1.0", features = ["derive"] }
+toml = { version = "1.1", features = ["preserve_order"] }
+indexmap = { version = "2.14", features = ["serde"] }
+directories = "6.0"
+# Import of Logitech Gaming Software XML profiles.
+roxmltree = "0.21"
+# LCD applets: local time (clock) and CPU / memory (system monitor).
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+sysinfo = { version = "0.39", default-features = false, features = ["system"] }
+# G13 Studio mouse profiles (mouse-profiles.json)
+serde_json = "1"
+# G13 Studio's own equalizer: the processing (the Windows audio effect is below)
+g13-dsp = { workspace = true }
+
+[dev-dependencies]
+
+[target.'cfg(windows)'.dependencies]
+# the equalizer's Windows audio effect (settings file, setup)
+g13-apo = { path = "../g13-apo" }
+vigem-client = "0.1.4"
+# WinRT "now playing" (GlobalSystemMediaTransportControlsSessionManager) for the LCD media applet
+windows = { version = "0.62", features = [
+    "Media_Control",
+    "Foundation",
+    # headset volume (Core Audio)
+    "Win32_Devices_FunctionDiscovery",
+    "Win32_Media_Audio",
+    "Win32_Media_Audio_Endpoints",
+    "Win32_System_Com",
+    "Win32_System_Com_StructuredStorage",
+    "Win32_System_Variant",
+    "Win32_UI_Shell_PropertiesSystem",
+] }
+windows-sys = { version = "0.61", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Dwm",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Registry",
+    "Win32_System_Threading",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Shell",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+[target.'cfg(unix)'.dependencies]
+# SIGTERM / SIGHUP too (systemd, logout): the clean stop releases every key
+ctrlc = { version = "3.4", features = ["termination"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+# uinput: virtual keyboard / mouse (and gamepad) of the injector
+evdev = "0.13"
+# D-Bus: foreground window from KWin (and MPRIS for the media applet)
+zbus = "5"

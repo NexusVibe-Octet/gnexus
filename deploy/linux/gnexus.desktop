@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=G Nexus
+GenericName=Logitech G13, G502 X PLUS and PRO X Wireless configuration
+GenericName[fr]=Configuration Logitech G13, G502 X PLUS et PRO X Wireless
+Comment=Keys, macros, per-game profiles, lighting, LCD and equalizer
+Comment[fr]=Touches, macros, profils par jeu, éclairage, LCD et égaliseur
+Exec=gnexus
+Icon=gnexus
+Terminal=false
+Categories=Utility;Settings;HardwareSettings;
+Keywords=Logitech;G13;G502;PRO X;G HUB;LGS;macro;keyboard;mouse;headset;equalizer;
+StartupWMClass=gnexus

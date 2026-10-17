@@ -1,0 +1,8 @@
+[package]
+name = "g13-dsp"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+description = "Audio processing shared by G13 Studio's audio effects (equalizer), OS-free"
+
+[dependencies]
