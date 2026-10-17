@@ -29,6 +29,9 @@ Il tourne dans la zone de notification, sans logiciel Logitech, et fonctionne sa
     <td align="center"><a href="docs/screenshots/macros.png"><img src="docs/screenshots/macros.png" width="400" alt="Macros : éditeur et RECORD"></a><br><sub>Macros : éditeur et RECORD</sub></td>
     <td align="center"><a href="docs/screenshots/color.png"><img src="docs/screenshots/color.png" width="400" alt="Couleur du rétroéclairage par menu"></a><br><sub>Couleur du rétroéclairage par menu</sub></td>
   </tr>
+  <tr>
+    <td align="center" colspan="2"><a href="docs/screenshots/overlay-in-game.webp"><img src="docs/screenshots/overlay-in-game.webp" width="820" alt="Overlay en jeu : le G13 par-dessus le jeu, sur le profil du jeu (G25 ou Échap pour y revenir)"></a><br><sub>Overlay en jeu : le G13 par-dessus le jeu, sur le profil du jeu (G25 ou Échap pour y revenir)</sub></td>
+  </tr>
 </table>
 
 ## Fonctionnalités

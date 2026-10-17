@@ -29,6 +29,9 @@ It runs in the notification area, needs no Logitech software, and keeps working 
     <td align="center"><a href="docs/screenshots/macros.png"><img src="docs/screenshots/macros.png" width="400" alt="Macros: editor and RECORD"></a><br><sub>Macros: editor and RECORD</sub></td>
     <td align="center"><a href="docs/screenshots/color.png"><img src="docs/screenshots/color.png" width="400" alt="Backlight colour per bank"></a><br><sub>Backlight colour per bank</sub></td>
   </tr>
+  <tr>
+    <td align="center" colspan="2"><a href="docs/screenshots/overlay-in-game.webp"><img src="docs/screenshots/overlay-in-game.webp" width="820" alt="In-game overlay: the G13 over the game, on the game's profile (G25 or Esc to go back)"></a><br><sub>In-game overlay: the G13 over the game, on the game's profile (G25 or Esc to go back)</sub></td>
+  </tr>
 </table>
 
 ## Features
