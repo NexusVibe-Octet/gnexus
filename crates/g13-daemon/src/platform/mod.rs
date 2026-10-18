@@ -288,11 +288,63 @@ pub fn running_apps() -> Vec<ForegroundApp> {
     }
 }
 
+/// Make G Nexus's threads go first when a game keeps the CPU busy (Windows: high
+/// priority class; elsewhere nothing yet).
+pub fn raise_priority() {
+    #[cfg(windows)]
+    windows::raise_priority();
+}
+
 /// Undo what the platform layer set up in the system (Linux: the KWin script).
 /// Called when G Nexus stops; nothing to do on Windows.
 pub fn shutdown() {
     #[cfg(target_os = "linux")]
     linux::foreground::shutdown();
+}
+
+/// Runs a watcher on its own thread ("g13-focus"): `current()` returns the latest result
+/// at once. Asking the system which window is in front can be slow while a game keeps the
+/// machine busy, and the engine thread, which handles every G13 key, must never wait for it.
+pub struct BackgroundWatcher {
+    latest: Arc<std::sync::Mutex<PlatformResult<Option<ForegroundApp>>>>,
+    stop: Arc<std::sync::atomic::AtomicBool>,
+}
+
+impl BackgroundWatcher {
+    /// Poll `inner` every `period` on a new thread (stopped when this is dropped).
+    pub fn spawn(mut inner: Box<dyn ForegroundWatcher>, period: std::time::Duration) -> Self {
+        use std::sync::atomic::Ordering;
+        let latest = Arc::new(std::sync::Mutex::new(Ok(None)));
+        let stop = Arc::new(std::sync::atomic::AtomicBool::new(false));
+        let (l, s) = (latest.clone(), stop.clone());
+        let spawned = std::thread::Builder::new().name("g13-focus".into()).spawn(move || {
+            while !s.load(Ordering::Relaxed) {
+                let r = inner.current();
+                let unsupported = matches!(r, Err(PlatformError::Unsupported(_)));
+                *l.lock().unwrap() = r;
+                if unsupported {
+                    break;
+                }
+                std::thread::sleep(period);
+            }
+        });
+        if let Err(e) = spawned {
+            *latest.lock().unwrap() = Err(PlatformError::Os(format!("no foreground thread: {e}")));
+        }
+        Self { latest, stop }
+    }
+}
+
+impl ForegroundWatcher for BackgroundWatcher {
+    fn current(&mut self) -> PlatformResult<Option<ForegroundApp>> {
+        self.latest.lock().unwrap().clone()
+    }
+}
+
+impl Drop for BackgroundWatcher {
+    fn drop(&mut self) {
+        self.stop.store(true, std::sync::atomic::Ordering::Relaxed);
+    }
 }
 
 pub fn default_foreground_watcher() -> Box<dyn ForegroundWatcher> {

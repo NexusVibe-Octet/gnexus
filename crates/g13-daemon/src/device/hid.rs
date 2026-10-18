@@ -12,6 +12,10 @@
 //! The daemon never panics on unplug: the session ends, held keys are
 //! released, and the worker goes back to polling `hidapi` until the G13
 //! reappears.
+//!
+//! LCD images (992 bytes, ~24 ms on the wire) are written by a second thread
+//! ("g13-lcd") through its own handle: written here, they would hold back the
+//! key reads for that long at every frame. Only the newest image is sent.
 
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -19,7 +23,9 @@ use std::sync::mpsc::{Receiver, Sender, TryRecvError};
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
-use g13_core::{BacklightReport, G13_PID, G13_VID, G13InputReport};
+use std::sync::Mutex;
+
+use g13_core::{BacklightReport, G13_PID, G13_VID, G13InputReport, G13LcdBuffer};
 use hidapi::{HidApi, HidDevice, HidError};
 
 use super::tracker::InputTracker;
@@ -114,7 +120,10 @@ impl HidWorker {
                     if self.events.send(DeviceEvent::Connected).is_err() {
                         return;
                     }
-                    let end = self.session(&dev);
+                    // a second handle, for the LCD writer (without it, images are written inline)
+                    let lcd = api.open(G13_VID, G13_PID).ok().and_then(LcdWriter::spawn);
+                    let end = self.session(&dev, lcd.as_ref());
+                    drop(lcd);
                     drop(dev);
 
                     // Never leave keys stuck down, whatever ended the session.
@@ -155,7 +164,7 @@ impl HidWorker {
         }
     }
 
-    fn session(&mut self, dev: &HidDevice) -> SessionEnd {
+    fn session(&mut self, dev: &HidDevice, lcd: Option<&LcdWriter>) -> SessionEnd {
         let timeout_ms = self.cfg.io_interval.as_millis().clamp(1, i32::MAX as u128) as i32;
         let mut buf = [0u8; 64];
 
@@ -195,6 +204,7 @@ impl HidWorker {
             // Execute pending commands between two reads.
             loop {
                 match self.commands.try_recv() {
+                    Ok(DeviceCommand::DrawLcd(fb)) if lcd.is_some() => lcd.unwrap().send(fb),
                     Ok(cmd) => match execute(dev, &cmd) {
                         Ok(()) => log::debug!("sent {:?}", CommandKind(&cmd)),
                         // A failing feature report usually means the device is gone;
@@ -221,6 +231,57 @@ impl HidWorker {
             left -= s;
         }
         self.stopping()
+    }
+}
+
+/// Writes LCD images on its own thread and handle; the newest image wins.
+struct LcdWriter {
+    slot: Arc<Mutex<Option<Box<G13LcdBuffer>>>>,
+    stop: Arc<AtomicBool>,
+    thread: Option<JoinHandle<()>>,
+}
+
+impl LcdWriter {
+    fn spawn(dev: HidDevice) -> Option<Self> {
+        let slot: Arc<Mutex<Option<Box<G13LcdBuffer>>>> = Arc::new(Mutex::new(None));
+        let stop = Arc::new(AtomicBool::new(false));
+        let (s, st) = (slot.clone(), stop.clone());
+        let thread = thread::Builder::new()
+            .name("g13-lcd".into())
+            .spawn(move || {
+                while !st.load(Ordering::Relaxed) {
+                    let frame = s.lock().unwrap().take();
+                    match frame {
+                        Some(fb) => {
+                            // an error means the G13 is gone: the read loop ends the session
+                            if let Err(e) = dev.write(fb.as_report()) {
+                                log::debug!("LCD write failed: {e}");
+                            }
+                        }
+                        None => thread::park_timeout(Duration::from_millis(200)),
+                    }
+                }
+            })
+            .map_err(|e| log::warn!("no LCD thread ({e}): images written inline"))
+            .ok()?;
+        Some(Self { slot, stop, thread: Some(thread) })
+    }
+
+    fn send(&self, fb: Box<G13LcdBuffer>) {
+        *self.slot.lock().unwrap() = Some(fb);
+        if let Some(t) = &self.thread {
+            t.thread().unpark();
+        }
+    }
+}
+
+impl Drop for LcdWriter {
+    fn drop(&mut self) {
+        self.stop.store(true, Ordering::Relaxed);
+        if let Some(t) = self.thread.take() {
+            t.thread().unpark();
+            let _ = t.join();
+        }
     }
 }
 

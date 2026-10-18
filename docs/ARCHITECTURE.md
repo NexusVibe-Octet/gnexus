@@ -128,6 +128,17 @@ Les noms de `KeyCode` sont des **positions physiques** (libellés US), comme les
    - **BD** → rétroéclairage on/off (+ `UiEvent::DisplayPower` pour couper le LCD).
    - **L1–L4** → `UiEvent::LcdButton` pour le gestionnaire d'applets.
 
+**Latence** (mesurée en jeu, du rapport HID lu à `SendInput`) :
+- sous Windows, le processus passe en **priorité haute** au démarrage (`platform::raise_priority`) :
+  un jeu qui sature le processeur faisait attendre les fils du G13 en priorité normale (médiane 6 ms,
+  plus de 60 ms une fois sur dix, jusqu'à 0,7 s) ; en priorité haute : médiane 0,3 ms, 9 sur 10 sous
+  0,5 ms. G Nexus utilise bien moins de 1 % du processeur ;
+- rien de lent sur le fil du moteur : l'application au premier plan est demandée par un fil à part
+  (`BackgroundWatcher`, « g13-focus », toutes les 100 ms) et le titre de fenêtre est lu par
+  `InternalGetWindowText` (`GetWindowTextW` attendait le jeu, jusqu'à 285 ms) ;
+- les images LCD (~24 ms d'envoi) partent par un second handle sur un fil « g13-lcd » (la plus récente
+  seulement) : elles ne retardent plus la lecture des touches.
+
 ## G13 Studio (interface)
 
 Un seul processus, comme LGS : la fenêtre, l'icône de notification et le `Runtime` du daemon,

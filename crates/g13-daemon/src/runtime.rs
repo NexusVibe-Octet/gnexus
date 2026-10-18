@@ -83,6 +83,8 @@ impl Runtime {
     /// Start the HID and engine threads. Returns the runtime and the stream
     /// of [`UiEvent`]s (the first one is the initial `ActiveProfile`).
     pub fn start(opts: RuntimeOptions) -> Result<(Self, Receiver<UiEvent>), String> {
+        // keys must not wait behind a game that saturates the CPU
+        platform::raise_priority();
         let injector: Arc<dyn InputInjector> = if opts.dry_run {
             log::info!("dry-run: nothing will be injected");
             Arc::new(RecordingInjector::logging())
@@ -91,7 +93,13 @@ impl Runtime {
         };
 
         let profiles_dir = opts.profiles_dir.clone().or_else(store::default_dir);
-        let watcher = opts.auto_switch.then(platform::default_foreground_watcher);
+        // asked on its own thread: the engine thread (G13 keys) never waits for the system
+        let watcher = opts.auto_switch.then(|| -> Box<dyn platform::ForegroundWatcher> {
+            Box::new(platform::BackgroundWatcher::spawn(
+                platform::default_foreground_watcher(),
+                std::time::Duration::from_millis(100),
+            ))
+        });
         let mut profiles = ProfileManager::new(open_store(profiles_dir.as_deref()), watcher);
         let recent = profiles.recent_apps();
 

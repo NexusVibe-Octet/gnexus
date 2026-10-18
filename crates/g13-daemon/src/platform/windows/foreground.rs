@@ -6,7 +6,7 @@ use windows_sys::Win32::System::Threading::{
     QueryFullProcessImageNameW,
 };
 use windows_sys::Win32::UI::WindowsAndMessaging::{
-    GetForegroundWindow, GetWindowTextW, GetWindowThreadProcessId,
+    GetForegroundWindow, GetWindowThreadProcessId, InternalGetWindowText,
 };
 
 use crate::platform::{ForegroundApp, ForegroundWatcher, PlatformResult};
@@ -24,10 +24,13 @@ impl Win32ForegroundWatcher {
     }
 }
 
+/// The window's title as Windows keeps it. `InternalGetWindowText`, unlike `GetWindowTextW`,
+/// never sends WM_GETTEXT to the window's owner: a busy game would make us wait for it
+/// (up to hundreds of ms, measured), and every G13 key with us.
 fn window_title(hwnd: HWND) -> String {
     let mut buf = [0u16; 512];
     // SAFETY: buffer pointer/len are valid; hwnd may be stale, in which case the call returns 0.
-    let n = unsafe { GetWindowTextW(hwnd, buf.as_mut_ptr(), buf.len() as i32) };
+    let n = unsafe { InternalGetWindowText(hwnd, buf.as_mut_ptr(), buf.len() as i32) };
     String::from_utf16_lossy(&buf[..n.max(0) as usize])
 }
 
