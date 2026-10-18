@@ -83,6 +83,9 @@ pub enum MacroStep {
     MouseUp(MouseButton),
     Wheel(i32),
     Delay(Duration),
+    /// Pause of `base` plus a random 0..=`extra`, drawn again at each pass
+    /// (repeated macros never keep the exact same rhythm).
+    RandomDelay { base: Duration, extra: Duration },
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -93,11 +96,14 @@ pub struct Macro {
 }
 
 impl Macro {
-    /// Sum of all explicit delays in one iteration.
+    /// Sum of all explicit delays in one iteration (random pauses: their fixed part).
     pub fn total_delay(&self) -> Duration {
         self.steps
             .iter()
-            .map(|s| if let MacroStep::Delay(d) = s { *d } else { Duration::ZERO })
+            .map(|s| match s {
+                MacroStep::Delay(d) | MacroStep::RandomDelay { base: d, .. } => *d,
+                _ => Duration::ZERO,
+            })
             .sum()
     }
 

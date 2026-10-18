@@ -117,6 +117,12 @@ class MacroEditor {
       let argHtml;
       if (kind === "key") argHtml = `<select class="arg">${keyOptions()}</select>`;
       else if (kind === "button") argHtml = `<select class="arg">${btnOptions()}</select>`;
+      else if (kind === "random") {
+        const [base = "50", extra = "0"] = rest;
+        argHtml = `<input class="arg" type="number" min="0" value="${esc(base)}" title="${esc(t("Pause fixe (ms)"))}">
+          <span class="rand-sep" title="${esc(t("Marge aléatoire ajoutée à chaque passage (ms)"))}">+ 0…</span>
+          <input class="arg2" type="number" min="0" value="${esc(extra)}" title="${esc(t("Marge aléatoire ajoutée à chaque passage (ms)"))}">`;
+      }
       else argHtml = `<input class="arg" type="number" value="${esc(arg)}">`;
       return `<div class="step" data-i="${i}" data-arg="${esc(kind === "key" ? canonicalKey(arg) : arg)}">
         <span class="n">${i + 1}</span>
@@ -174,11 +180,13 @@ class MacroEditor {
     if (!row) return;
     if (e.target.classList.contains("op")) {
       const kind = STEP_OPS.find(([o]) => o === e.target.value)[2];
-      const def = kind === "key" ? "A" : kind === "button" ? "Left" : e.target.value === "wait" ? "50" : "1";
+      const def = kind === "key" ? "A" : kind === "button" ? "Left" : kind === "random" ? "50 20" : e.target.value === "wait" ? "50" : "1";
       m.steps[+row.dataset.i] = `${e.target.value} ${def}`;
       this.render();
     } else {
-      m.steps[+row.dataset.i] = `${row.querySelector(".op").value} ${row.querySelector(".arg").value}`;
+      const op = row.querySelector(".op").value;
+      const n = (sel) => Math.max(0, Math.round(+row.querySelector(sel).value || 0));
+      m.steps[+row.dataset.i] = op === "wait_random" ? `wait_random ${n(".arg")} ${n(".arg2")}` : `${op} ${row.querySelector(".arg").value}`;
     }
     this.changed();
   }

@@ -203,6 +203,13 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round
 #device .key.empty .klabel { fill: var(--line-dim); font-weight: 400; }
 #device .key .kx { stroke: var(--line-dim); stroke-width: 1.6; display: none; }
 #device .key.selected .kshape { stroke: var(--accent); fill: var(--accent-dim); filter: drop-shadow(0 0 8px var(--accent-glow)); }
+/* drag a key onto another */
+#device .key.drag-src .kshape { stroke-dasharray: 5 4; opacity: .55; }
+#device .key.drop-target .kshape { stroke: var(--accent); fill: var(--accent-dim); filter: drop-shadow(0 0 10px var(--accent-glow)); }
+body.key-dragging, body.key-dragging #device .key { cursor: grabbing; }
+.key-ghost { position: fixed; left: 0; top: 0; z-index: 90; pointer-events: none; padding: 4px 10px; border-radius: 8px;
+  background: var(--panel); border: 1.5px solid var(--accent); color: var(--text); font-weight: 600; font-size: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .45); white-space: nowrap; }
 #device .key.live .kshape { fill: color-mix(in srgb, var(--glow) 50%, transparent); stroke: #fff; filter: drop-shadow(0 0 10px var(--glow)); }
 #device .key.thumb .kid { font-size: 9px; }
 #device .key.thumb .klabel { font-size: 14px; }
@@ -793,6 +800,9 @@ html.overlay .modal { width: 92vw; }
 .step .n { width: 22px; color: var(--muted); font-size: 12px; text-align: right; }
 .step select.op { width: 210px; }
 .step input.arg, .step select.arg { width: 170px; }
+/* random pause: fixed part + random margin */
+.step input.arg2 { width: 90px; }
+.step .rand-sep { color: var(--muted); font-size: 13px; white-space: nowrap; }
 .step .icon-btn { width: 30px; height: 30px; }
 
 .toast {

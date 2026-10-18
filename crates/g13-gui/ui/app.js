@@ -390,6 +390,17 @@ function openPicker(id) {
   Device.setSelected(id);
 }
 
+/** Key dragged onto another: its action replaces the target's and it becomes blank. */
+function moveKey(from, to) {
+  if (!S.dto || from === to) return;
+  const b = bankObj();
+  if (b[from] == null) { toast(t("{key} n'a aucune action à déplacer", { key: from }), true); return; }
+  b[to] = b[from];
+  delete b[from];
+  render();
+  save(t("{from} déplacé sur {to}", { from, to }));
+}
+
 /**
  * Open the action picker for any target: { label, sub, get(), set(action), mouse? }.
  * `mouse: true` limits it to what a mouse's memory can hold (one key + modifiers,
@@ -1142,6 +1153,7 @@ async function boot() {
   Device.build($("#device"), {
     onKey: openPicker,
     onBank: (b) => { S.bank = b; render(); },
+    onMove: moveKey,
   });
   const fit = () => Device.fit($("#device-wrap"));
   new ResizeObserver(fit).observe($("#device-wrap"));

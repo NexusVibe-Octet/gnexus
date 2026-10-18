@@ -120,6 +120,11 @@ impl Player<'_> {
                             break 'outer;
                         }
                     }
+                    MacroStep::RandomDelay { base, extra } => {
+                        if !self.sleep(random_delay(base, extra)) {
+                            break 'outer;
+                        }
+                    }
                 }
             }
             if !looping {
@@ -158,8 +163,29 @@ impl Player<'_> {
     }
 }
 
+/// `base` plus a random 0..=`extra` (whole milliseconds).
+fn random_delay(base: Duration, extra: Duration) -> Duration {
+    let extra = extra.as_millis().min(u64::MAX as u128) as u64;
+    base + Duration::from_millis(if extra == 0 { 0 } else { fastrand::u64(0..=extra) })
+}
+
 fn report(r: PlatformResult) {
     if let Err(e) = r {
         log::warn!("macro injection failed: {e}");
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::random_delay;
+    use std::time::Duration;
+
+    #[test]
+    fn random_delay_stays_within_its_margin_and_varies() {
+        let ms = Duration::from_millis;
+        let draws: Vec<Duration> = (0..500).map(|_| random_delay(ms(500), ms(30))).collect();
+        assert!(draws.iter().all(|d| *d >= ms(500) && *d <= ms(530)));
+        assert!(draws.iter().any(|d| *d != draws[0]), "always the same pause");
+        assert_eq!(random_delay(ms(80), ms(0)), ms(80));
     }
 }

@@ -28,6 +28,8 @@ g13-core = { workspace = true }
 logi-hidpp = { workspace = true }
 hidapi = { workspace = true }
 log = "0.4"
+# random part of the macros' random pauses
+fastrand = "2"
 env_logger = "0.11"
 ctrlc = "3.4"
 # Profiles: TOML files in the standard config directory.

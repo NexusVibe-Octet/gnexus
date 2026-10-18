@@ -158,7 +158,10 @@ l'application refuse elle-même une deuxième instance (plugin single-instance).
     choix se fait dans une fenêtre centrée : 6 couleurs de base, carré teinte/saturation, code hexa ;
     la couleur s'essaie en direct sur le G13, « Annuler » (ou Échap / clic à côté) rétablit l'ancienne ;
   - sélecteur d'action à onglets (Clavier, Touches, Média, Souris, Manette, Macros, modificateurs),
-    « Paramètres avancés » (applications associées, éditeur de macros), écran « G13 non détecté ».
+    « Paramètres avancés » (applications associées, éditeur de macros), écran « G13 non détecté » ;
+  - glisser-déposer d'une touche sur une autre (`Device.dragKeys`, `moveKey` dans app.js) : au-delà de
+    6 px la pression devient un glissement (pas de clic), la touche visée s'allume ; au relâchement, son
+    action remplace celle de la cible et la touche de départ devient vierge (menu affiché seulement).
 - **Aperçu sur le G13** : le profil affiché est envoyé au runtime (`Request::Preview`) ; tant que la
   fenêtre de G13 Studio a le focus (exe au premier plan = le nôtre), c'est lui qui est actif sur le
   G13, donc couleur et touches s'essaient en direct. Ailleurs, la bascule automatique reprend.
@@ -753,7 +756,8 @@ G6 = { tap = "D", hold = "LeftCtrl", double_tap = { macro = "spam" }, tap_hold =
 [macros.spam]
 mode = "repeat_while_held"      # once / repeat_while_held / toggle
 steps = ["down Q", "wait 20", "up Q", "wait 80"]
-# étapes : down/up <touche>, mouse_down/mouse_up <bouton>, wheel <n>, wait <ms>
+# étapes : down/up <touche>, mouse_down/mouse_up <bouton>, wheel <n>, wait <ms>,
+#          wait_random <ms> <marge> (pause de <ms> plus 0 à <marge> ms tirés à chaque passage)
 ```
 
 **Touche multi-états (tap dance)** : `{ tap, hold, double_tap, tap_hold }`, chaque champ facultatif et

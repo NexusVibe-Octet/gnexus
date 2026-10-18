@@ -115,8 +115,11 @@ const Device = {
   el: null,
   svg: null,
 
-  /** Build into `host`. `onKey(id)` for bindable inputs, `onBank(bank)` for M1–M3. */
-  build(host, { onKey, onBank }) {
+  /**
+   * Build into `host`. `onKey(id)` for bindable inputs, `onBank(bank)` for M1–M3,
+   * `onMove(from, to)` when a key is dragged onto another one.
+   */
+  build(host, { onKey, onBank, onMove }) {
     host.innerHTML = "";
     this.el = host;
     const svg = el("svg", { class: "body", viewBox: `0 0 ${DEVICE_W} ${DEVICE_H}` }, host);
@@ -170,6 +173,8 @@ const Device = {
     kt.textContent = "G25";
     el("text", { class: "klabel", x: STICK.cx, y: STICK.cy + 9 }, knob);
     knob.addEventListener("click", () => onKey("G25"));
+
+    if (onMove) this.dragKeys(svg, onMove);
 
     // HTML overlays: LCD, its buttons, M strip, colour + dead-zone controls
     const add = (cls, id, x, y, w, h, html = "") => {
@@ -253,6 +258,63 @@ const Device = {
 
   setRecording(on) {
     this.key("MR")?.classList.toggle("rec", on);
+  },
+
+  /**
+   * Drag a key onto another one: past a few pixels the press becomes a drag (no click),
+   * the key under the cursor lights up, and releasing on it calls `onMove(from, to)`.
+   */
+  dragKeys(svg, onMove) {
+    let drag = null;
+    const keyAt = (x, y) => document.elementFromPoint(x, y)?.closest?.("#device [data-key]");
+    const end = () => {
+      if (!drag) return;
+      drag.ghost?.remove();
+      drag.src.classList.remove("drag-src");
+      drag.over?.classList.remove("drop-target");
+      document.body.classList.remove("key-dragging");
+      drag = null;
+    };
+    svg.addEventListener("pointerdown", (e) => {
+      const src = e.button === 0 && e.target.closest("[data-key]");
+      if (!src) return;
+      drag = { src, id: src.dataset.key, x: e.clientX, y: e.clientY, on: false };
+    });
+    window.addEventListener("pointermove", (e) => {
+      if (!drag) return;
+      if (!drag.on) {
+        if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 6) return;
+        drag.on = true;
+        drag.src.classList.add("drag-src");
+        document.body.classList.add("key-dragging");
+        drag.ghost = document.createElement("div");
+        drag.ghost.className = "key-ghost";
+        drag.ghost.textContent = drag.src.querySelector(".klabel")?.textContent || drag.id;
+        document.body.append(drag.ghost);
+      }
+      drag.ghost.style.transform = `translate(${e.clientX + 14}px, ${e.clientY + 10}px)`;
+      const over = keyAt(e.clientX, e.clientY);
+      const target = over && over !== drag.src ? over : null;
+      if (target !== drag.over) {
+        drag.over?.classList.remove("drop-target");
+        target?.classList.add("drop-target");
+        drag.over = target;
+      }
+    });
+    window.addEventListener("pointerup", () => {
+      if (!drag) return;
+      const { on, id, over } = drag;
+      end();
+      if (!on) return;
+      // a drag is not a click: the key under the cursor must not open the picker
+      // (the click, if any, follows this pointerup at once; never swallow a later one)
+      const swallow = (c) => { c.stopPropagation(); c.preventDefault(); };
+      window.addEventListener("click", swallow, { capture: true, once: true });
+      setTimeout(() => window.removeEventListener("click", swallow, { capture: true }), 0);
+      if (over) onMove(id, over.dataset.key);
+    });
+    window.addEventListener("pointercancel", end);
+    window.addEventListener("blur", end);
   },
 
   setSelected(id) {

@@ -1295,6 +1295,7 @@ dependencies = [
  "directories",
  "env_logger",
  "evdev",
+ "fastrand",
  "g13-apo",
  "g13-core",
  "g13-dsp",

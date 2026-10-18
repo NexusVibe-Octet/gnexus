@@ -317,6 +317,16 @@ fn parse_step(s: &str) -> Option<MacroStep> {
         "mouse_up" => MacroStep::MouseUp(MouseButton::parse(arg)?),
         "wheel" => MacroStep::Wheel(arg.parse().ok()?),
         "wait" => MacroStep::Delay(Duration::from_millis(arg.strip_suffix("ms").unwrap_or(arg).trim().parse().ok()?)),
+        // "wait_random 500 30": 500 ms plus a random 0..=30 ms
+        "wait_random" => {
+            let mut n = arg.split_whitespace().map(|v| v.strip_suffix("ms").unwrap_or(v).parse::<u64>());
+            let base = n.next()?.ok()?;
+            let extra = n.next().unwrap_or(Ok(0)).ok()?;
+            if n.next().is_some() {
+                return None;
+            }
+            MacroStep::RandomDelay { base: Duration::from_millis(base), extra: Duration::from_millis(extra) }
+        }
         _ => return None,
     })
 }
@@ -481,6 +491,24 @@ fn format_step(s: &MacroStep) -> String {
         MacroStep::Wheel(d) => format!("wheel {d}"),
         // Sub-millisecond precision is not representable in the file.
         MacroStep::Delay(d) => format!("wait {}", d.as_millis()),
+        MacroStep::RandomDelay { base, extra } => format!("wait_random {} {}", base.as_millis(), extra.as_millis()),
+    }
+}
+
+#[cfg(test)]
+mod random_wait_tests {
+    use super::*;
+
+    #[test]
+    fn wait_random_parses_and_round_trips() {
+        let ms = Duration::from_millis;
+        let step = parse_step("wait_random 500 30").unwrap();
+        assert_eq!(step, MacroStep::RandomDelay { base: ms(500), extra: ms(30) });
+        assert_eq!(format_step(&step), "wait_random 500 30");
+        assert_eq!(parse_step("wait_random 120"), Some(MacroStep::RandomDelay { base: ms(120), extra: ms(0) }));
+        assert_eq!(parse_step("wait_random 500ms 30ms"), Some(MacroStep::RandomDelay { base: ms(500), extra: ms(30) }));
+        assert!(parse_step("wait_random 500 30 9").is_none());
+        assert!(parse_step("wait_random x").is_none());
     }
 }
 

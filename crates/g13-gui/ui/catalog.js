@@ -280,4 +280,6 @@ const STEP_OPS = [
   ["down", "Appuyer touche", "key"], ["up", "Relâcher touche", "key"],
   ["mouse_down", "Appuyer bouton souris", "button"], ["mouse_up", "Relâcher bouton souris", "button"],
   ["wheel", "Molette (crans)", "number"], ["wait", "Pause (ms)", "number"],
+  // "wait_random 500 30": 500 ms plus a random 0 to 30 ms, drawn again at each pass
+  ["wait_random", "Pause aléatoire (ms)", "random"],
 ];

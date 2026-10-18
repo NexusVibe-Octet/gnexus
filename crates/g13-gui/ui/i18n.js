@@ -171,6 +171,13 @@ const TR = {
   "AUCUNE ACTION": ["NO ACTION", "KEINE AKTION", "NESSUNA AZIONE", "NINGUNA ACCIÓN"],
   "G25 · clic stick": ["G25 · stick click", "G25 · Stick-Klick", "G25 · clic stick", "G25 · clic del stick"],
   "aucune": ["none", "keine", "nessuna", "ninguna"],
+  "{key} n'a aucune action à déplacer": ["{key} has no action to move", "{key} hat keine Aktion zum Verschieben",
+    "{key} non ha nessuna azione da spostare", "{key} no tiene ninguna acción que mover"],
+  "{from} déplacé sur {to}": ["{from} moved to {to}", "{from} nach {to} verschoben", "{from} spostato su {to}", "{from} movido a {to}"],
+  "Pause aléatoire (ms)": ["Random pause (ms)", "Zufällige Pause (ms)", "Pausa casuale (ms)", "Pausa aleatoria (ms)"],
+  "Pause fixe (ms)": ["Fixed pause (ms)", "Feste Pause (ms)", "Pausa fissa (ms)", "Pausa fija (ms)"],
+  "Marge aléatoire ajoutée à chaque passage (ms)": ["Random margin added at each pass (ms)", "Zufälliger Zuschlag bei jedem Durchlauf (ms)",
+    "Margine casuale aggiunto a ogni passaggio (ms)", "Margen aleatorio añadido en cada pasada (ms)"],
   "Sauvegarde automatique de toute la configuration (G13, souris, casque, macros)": [
     "Automatic backup of the whole configuration (G13, mouse, headset, macros)",
     "Automatische Sicherung der gesamten Konfiguration (G13, Maus, Headset, Makros)",
